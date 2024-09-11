@@ -13,6 +13,7 @@ public class User {
     private String contraseña;
     @Enumerated(EnumType.STRING)
     private TipoUsuario tipo;
+    //hoolissss
 
     public User() {
     }
