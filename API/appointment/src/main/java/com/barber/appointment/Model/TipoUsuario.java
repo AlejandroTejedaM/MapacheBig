@@ -1,4 +1,4 @@
-package Model;
+package com.barber.appointment.Model;
 
 public enum TipoUsuario {
     ADMINISTRADOR,

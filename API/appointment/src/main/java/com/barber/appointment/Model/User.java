@@ -1,4 +1,4 @@
-package Model;
+package com.barber.appointment.Model;
 
 import jakarta.persistence.*;
 
@@ -6,12 +6,17 @@ import jakarta.persistence.*;
 @Table(name = "users")
 public class User {
     @Id
+    @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long usuarioId;
+    @Column(nullable = false)
     private String nombre;
+    @Column(nullable = false, unique = true)
     private String correo;
+    @Column(nullable = false)
     private String contraseña;
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private TipoUsuario tipo;
 
     public User() {
