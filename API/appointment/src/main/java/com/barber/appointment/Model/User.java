@@ -14,7 +14,7 @@ public class User {
     @Column(nullable = false, unique = true)
     private String correo;
     @Column(nullable = false)
-    private String contraseña;
+    private String contrasennia;
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private TipoUsuario tipo;
@@ -23,10 +23,10 @@ public class User {
     public User() {
     }
 
-    public User(String nombre, String correo, String contraseña, TipoUsuario tipo) {
+    public User(String nombre, String correo, String contrasennia, TipoUsuario tipo) {
         this.nombre = nombre;
         this.correo = correo;
-        this.contraseña = contraseña;
+        this.contrasennia = contrasennia;
         this.tipo = tipo;
     }
 
@@ -54,12 +54,12 @@ public class User {
         this.correo = correo;
     }
 
-    public String getContraseña() {
-        return contraseña;
+    public String getContrasennia() {
+        return contrasennia;
     }
 
-    public void setContraseña(String contraseña) {
-        this.contraseña = contraseña;
+    public void setContrasennia(String contraseña) {
+        this.contrasennia = contraseña;
     }
 
     public TipoUsuario getTipo() {
@@ -76,7 +76,7 @@ public class User {
                 "usuarioId=" + usuarioId +
                 ", nombre='" + nombre + '\'' +
                 ", correo='" + correo + '\'' +
-                ", contraseña='" + contraseña + '\'' +
+                ", contraseña='" + contrasennia + '\'' +
                 ", tipo=" + tipo +
                 '}';
     }
