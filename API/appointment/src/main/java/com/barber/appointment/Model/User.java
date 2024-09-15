@@ -2,6 +2,9 @@ package com.barber.appointment.Model;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Table(name = "users")
 public class User {
@@ -18,7 +21,10 @@ public class User {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private TipoUsuario tipo;
-    //hoolissss
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Appointment> listaCitas = new ArrayList<>();
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Availability> listaDisponibilidad = new ArrayList<>();
 
     public User() {
     }
@@ -58,8 +64,8 @@ public class User {
         return contrasennia;
     }
 
-    public void setContrasennia(String contraseña) {
-        this.contrasennia = contraseña;
+    public void setContrasennia(String contrasennia) {
+        this.contrasennia = contrasennia;
     }
 
     public TipoUsuario getTipo() {
@@ -70,23 +76,30 @@ public class User {
         this.tipo = tipo;
     }
 
+    public List<Appointment> getListaCitas() {
+        return listaCitas;
+    }
+
+    public void setListaCitas(List<Appointment> listaCitas) {
+        this.listaCitas = listaCitas;
+    }
+
+    public List<Availability> getListaDisponibilidad() {
+        return listaDisponibilidad;
+    }
+
+    public void setListaDisponibilidad(List<Availability> listaDisponibilidad) {
+        this.listaDisponibilidad = listaDisponibilidad;
+    }
+
     @Override
     public String toString() {
         return "User{" +
                 "usuarioId=" + usuarioId +
                 ", nombre='" + nombre + '\'' +
                 ", correo='" + correo + '\'' +
-                ", contraseña='" + contrasennia + '\'' +
+                ", contrasennia='" + contrasennia + '\'' +
                 ", tipo=" + tipo +
                 '}';
     }
-
-    public boolean isAdmin() {
-        return this.tipo == TipoUsuario.ADMINISTRADOR;
-    }
-
-    public boolean isClient() {
-        return this.tipo == TipoUsuario.CLIENTE;
-    }
-
 }
