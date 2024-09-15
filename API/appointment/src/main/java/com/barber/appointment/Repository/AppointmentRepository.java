@@ -1,7 +1,7 @@
 package com.barber.appointment.Repository;
 
 import com.barber.appointment.Model.Appointment;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.CrudRepository;
 
-public interface AppointmentRepository extends JpaRepository<Appointment, Long> {
+public interface AppointmentRepository extends CrudRepository<Appointment, Long> {
 }
