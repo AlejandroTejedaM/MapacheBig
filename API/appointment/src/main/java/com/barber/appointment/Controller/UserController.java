@@ -1,5 +1,6 @@
 package com.barber.appointment.Controller;
 
+import com.barber.appointment.Exceptions.UserAlreadyExistsException;
 import com.barber.appointment.Model.User;
 import com.barber.appointment.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +13,7 @@ import java.net.URI;
 
 @RestController
 @RequestMapping("/api/user")
-public class UserController {
+public class UserController{
     @Autowired
     private UserRepository userRepository;
 
@@ -24,6 +25,9 @@ public class UserController {
     @PostMapping
     public ResponseEntity<String> create(@RequestBody User newObject, UriComponentsBuilder ucb) {
         try {
+            if (userRepository.findByCorreo(newObject.getCorreo()).isPresent()) {
+                throw new UserAlreadyExistsException("User with email " + newObject.getCorreo() + " already exists");
+            }
             User newUsuario = (User) newObject;
             User savedUsuario = userRepository.save(newUsuario);
             URI uri = ucb
@@ -31,10 +35,12 @@ public class UserController {
                     .buildAndExpand(savedUsuario.getUsuarioId())
                     .toUri();
             return ResponseEntity.created(uri).build();
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (UserAlreadyExistsException e) {
+            return ResponseEntity.status(409).body(e.getMessage());
         }
-
+        catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
 }
