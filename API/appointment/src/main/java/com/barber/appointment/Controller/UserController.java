@@ -9,11 +9,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.util.Optional;
 
 
 @RestController
 @RequestMapping("/api/usuario")
-public class UserController{
+public class UserController {
     @Autowired
     private UserRepository userRepository;
 
@@ -49,8 +50,7 @@ public class UserController{
             return ResponseEntity.created(uri).build();
         } catch (UserAlreadyExistsException e) {
             return ResponseEntity.status(409).body(e.getMessage());
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
     }
@@ -80,4 +80,38 @@ public class UserController{
             return ResponseEntity.badRequest().build();
         }
     }
+
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestBody User loginUser) {
+        try {
+            Optional<User> userOptional = userRepository.findByCorreo(loginUser.getCorreo());
+            if (userOptional.isPresent()) {
+                User user = userOptional.get();
+                if (user.getContrasennia().equals(loginUser.getContrasennia())) {
+                    // Authentication successful
+                    return ResponseEntity.ok("Login successful");
+                } else {
+                    // Invalid password
+                    return ResponseEntity.status(401).body("Invalid credentials");
+                }
+            } else {
+                // User not found
+                return ResponseEntity.status(404).body("User not found");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/correo/{correo}")
+    public ResponseEntity<User> findByCorreo(@PathVariable String correo) {
+        try {
+            return userRepository.findByCorreo(correo)
+                    .map(ResponseEntity::ok)
+                    .orElseGet(() -> ResponseEntity.notFound().build());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
 }

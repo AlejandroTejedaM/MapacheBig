@@ -44,9 +44,9 @@ public class ServicioController {
     }
 
     @GetMapping("/nombre/{name}")
-    public ResponseEntity<Service> findByName(@PathVariable String name) {
+    public ResponseEntity<Iterable<Service>> findAllByName(@PathVariable String name) {
         try {
-            Optional<Service> serviceOptional = serviceRepository.findByNombre(name);
+            Optional<Iterable<Service>> serviceOptional = serviceRepository.findAllByNombre(name);
             if (serviceOptional.isPresent()) {
                 return ResponseEntity.ok(serviceOptional.get());
             } else {
@@ -58,10 +58,10 @@ public class ServicioController {
     }
 
     @GetMapping("/precio/{price}")
-    public ResponseEntity<Service> findByPrice(@PathVariable String price) {
+    public ResponseEntity<Iterable<Service>> findAllByPrice(@PathVariable String price) {
         try {
             Double priceDouble = Double.parseDouble(price);
-            Optional<Service> serviceOptional = serviceRepository.findByPrecio(priceDouble);
+            Optional<Iterable<Service>> serviceOptional = serviceRepository.findAllByPrecio(priceDouble);
             if (serviceOptional.isPresent()) {
                 return ResponseEntity.ok(serviceOptional.get());
             } else {
@@ -73,10 +73,10 @@ public class ServicioController {
     }
 
     @GetMapping("/duracion/{duration}")
-    public ResponseEntity<Service> findByDuration(@PathVariable String duration) {
+    public ResponseEntity<Iterable<Service>> findAllByDuration(@PathVariable String duration) {
         try {
             Integer durationInt = Integer.parseInt(duration);
-            Optional<Service> serviceOptional = serviceRepository.findByDuracion(durationInt);
+            Optional<Iterable<Service>> serviceOptional = serviceRepository.findAllByDuracion(durationInt);
             if (serviceOptional.isPresent()) {
                 return ResponseEntity.ok(serviceOptional.get());
             } else {

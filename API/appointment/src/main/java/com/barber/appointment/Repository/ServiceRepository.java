@@ -6,9 +6,9 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.Optional;
 
 public interface ServiceRepository extends CrudRepository<Service, Long> {
-    Optional<Service> findByNombre(String nombre);
+    Optional<Iterable<Service>> findAllByNombre(String nombre);
 
-    Optional<Service> findByPrecio(Double precio);
+    Optional<Iterable<Service>> findAllByPrecio(Double precio);
 
-    Optional<Service> findByDuracion(Integer durationInt);
+    Optional<Iterable<Service>> findAllByDuracion(Integer durationInt);
 }

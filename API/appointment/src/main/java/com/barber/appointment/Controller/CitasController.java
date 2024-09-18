@@ -26,6 +26,7 @@ public class CitasController {
 
     @Autowired
     private ServiceRepository serviceRepository;
+
     @GetMapping
     public ResponseEntity<Iterable<Appointment>> findAll() {
         return ResponseEntity.ok(citasRepository.findAll());
@@ -110,7 +111,7 @@ public class CitasController {
             User user = userRepository.findById(idLong).get();
             if (user == null) {
                 return ResponseEntity.notFound().build();
-            }else{
+            } else {
                 return ResponseEntity.ok(citasRepository.findByUser(user));
             }
         } catch (Exception e) {
