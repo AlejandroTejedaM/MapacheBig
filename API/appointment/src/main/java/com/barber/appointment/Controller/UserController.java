@@ -12,7 +12,7 @@ import java.net.URI;
 
 
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/api/usuario")
 public class UserController{
     @Autowired
     private UserRepository userRepository;
@@ -20,6 +20,18 @@ public class UserController{
     @GetMapping
     public ResponseEntity<Iterable<User>> findAll() {
         return ResponseEntity.ok(userRepository.findAll());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<User> findById(@PathVariable String id) {
+        try {
+            Long idLong = Long.parseLong(id);
+            return userRepository.findById(idLong)
+                    .map(ResponseEntity::ok)
+                    .orElseGet(() -> ResponseEntity.notFound().build());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @PostMapping
@@ -31,7 +43,7 @@ public class UserController{
             User newUsuario = (User) newObject;
             User savedUsuario = userRepository.save(newUsuario);
             URI uri = ucb
-                    .path("api/user")
+                    .path("api/usuario")
                     .buildAndExpand(savedUsuario.getUsuarioId())
                     .toUri();
             return ResponseEntity.created(uri).build();
@@ -43,4 +55,29 @@ public class UserController{
         }
     }
 
+    @PutMapping
+    public ResponseEntity<String> update(@RequestBody User newObject, UriComponentsBuilder ucb) {
+        try {
+            User newUsuario = (User) newObject;
+            User savedUsuario = userRepository.save(newUsuario);
+            URI uri = ucb
+                    .path("api/usuario")
+                    .buildAndExpand(savedUsuario.getUsuarioId())
+                    .toUri();
+            return ResponseEntity.created(uri).build();
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> delete(@PathVariable String id) {
+        try {
+            Long idLong = Long.parseLong(id);
+            userRepository.deleteById(idLong);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
 }

@@ -1,5 +1,6 @@
 package com.barber.appointment.Model;
 
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 
 import java.sql.Time;
@@ -22,7 +23,7 @@ public class Availability {
     private Time horaFin;
 
     @ManyToOne
-    @JoinColumn(name = "usuarioId", nullable = false, referencedColumnName = "usuarioId")
+    @JoinColumn(name = "usuario_id", nullable = false)
     private User user;
 
     public Availability() {

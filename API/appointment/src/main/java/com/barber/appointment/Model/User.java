@@ -1,12 +1,15 @@
 package com.barber.appointment.Model;
 
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
+@JsonIgnoreProperties({"listaCitas", "listaDisponibilidad"})
 public class User {
     @Id
     @Column
