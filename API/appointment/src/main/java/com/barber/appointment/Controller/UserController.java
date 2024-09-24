@@ -1,5 +1,6 @@
 package com.barber.appointment.Controller;
 
+import com.barber.appointment.Security.JWT.JwtUtil;
 import com.barber.appointment.Exceptions.UserAlreadyExistsException;
 import com.barber.appointment.Model.User;
 import com.barber.appointment.Repository.UserRepository;
@@ -15,6 +16,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api/usuario")
 public class UserController {
+
     @Autowired
     private UserRepository userRepository;
 
@@ -51,7 +53,7 @@ public class UserController {
         } catch (UserAlreadyExistsException e) {
             return ResponseEntity.status(409).body(e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
@@ -89,7 +91,8 @@ public class UserController {
                 User user = userOptional.get();
                 if (user.getContrasennia().equals(loginUser.getContrasennia())) {
                     // Authentication successful
-                    return ResponseEntity.ok("Login successful");
+                    String token = JwtUtil.generateToken(user.getCorreo());
+                    return ResponseEntity.ok(token);
                 } else {
                     // Invalid password
                     return ResponseEntity.status(401).body("Invalid credentials");

@@ -1,5 +1,6 @@
 package com.barber.appointment.Model;
 
+import ch.qos.logback.core.subst.Token;
 import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 
