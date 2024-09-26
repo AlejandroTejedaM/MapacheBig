@@ -3,7 +3,9 @@ package com.barber.appointment.Controller;
 import java.net.URI;
 import java.util.Optional;
 
+import com.barber.appointment.EmailService;
 import com.barber.appointment.Model.Appointment;
+import com.barber.appointment.Model.Observer.EmailObserver;
 import com.barber.appointment.Model.Service;
 import com.barber.appointment.Model.User;
 import com.barber.appointment.Repository.AppointmentRepository;
@@ -11,6 +13,7 @@ import com.barber.appointment.Repository.ServiceRepository;
 import com.barber.appointment.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -26,6 +29,12 @@ public class CitasController {
 
     @Autowired
     private ServiceRepository serviceRepository;
+
+    @Autowired
+    private EmailObserver emailObserver;
+
+    @Autowired
+    private JavaMailSender mailSender;
 
     @GetMapping
     public ResponseEntity<Iterable<Appointment>> findAll() {
@@ -45,10 +54,15 @@ public class CitasController {
             }
             newObject.setUser(userOptional.get());
             newObject.setServicio(serviceOptional.get());
-            Appointment savedUsuario = citasRepository.save(newObject);
+            Appointment savedCita = citasRepository.save(newObject);
+
+            emailObserver.setUserEmail(savedCita.getUser().getCorreo());
+            String fecha = savedCita.getFechaHora().toLocalDateTime().toLocalDate().toString();
+            String hora = savedCita.getFechaHora().toLocalDateTime().toLocalTime().toString();
+            emailObserver.update("Cita agendada para el " + fecha + " a las " + hora);
             URI uri = ucb
                     .path("api/citas")
-                    .buildAndExpand(savedUsuario.getCitaId())
+                    .buildAndExpand(savedCita.getCitaId())
                     .toUri();
             return ResponseEntity.created(uri).build();
         } catch (Exception e) {
