@@ -8,25 +8,32 @@ import java.sql.Timestamp;
 @Table(name = "appointments")
 public class Appointment {
     @Id
-    @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long citaId;
+
     @Column(nullable = false)
     private Timestamp fechaHora;
+
     @ManyToOne
     @JoinColumn(name = "servicioId", nullable = false, referencedColumnName = "servicioId")
     private Service servicio;
+
     @ManyToOne
     @JoinColumn(name = "usuarioId", nullable = false, referencedColumnName = "usuarioId")
     private User user;
 
+    @ManyToOne
+    @JoinColumn(name = "barberoId", nullable = false, referencedColumnName = "barberoId")
+    private Barbero barbero;
+
     public Appointment() {
     }
 
-    public Appointment(Timestamp fechaHora, Service servicio, User user) {
+    public Appointment(Timestamp fechaHora, Service servicio, User user, Barbero barbero) {
         this.fechaHora = fechaHora;
         this.servicio = servicio;
         this.user = user;
+        this.barbero = barbero;
     }
 
     public Long getCitaId() {
@@ -61,6 +68,14 @@ public class Appointment {
         this.user = user;
     }
 
+    public Barbero getBarbero() {
+        return barbero;
+    }
+
+    public void setBarbero(Barbero barbero) {
+        this.barbero = barbero;
+    }
+
     @Override
     public String toString() {
         return "Appointment{" +
@@ -68,6 +83,7 @@ public class Appointment {
                 ", fechaHora=" + fechaHora +
                 ", servicio=" + servicio +
                 ", user=" + user +
+                ", barbero=" + barbero +
                 '}';
     }
 }

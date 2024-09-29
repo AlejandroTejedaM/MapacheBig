@@ -23,7 +23,7 @@ public class Availability {
     private Time horaFin;
 
     @ManyToOne
-    @JoinColumn(name = "usuario_id", nullable = false)
+    @JoinColumn(name = "usuario_id", nullable = false, referencedColumnName = "usuarioId")
     private User user;
 
     public Availability() {

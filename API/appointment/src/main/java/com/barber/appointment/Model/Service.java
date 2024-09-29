@@ -11,28 +11,37 @@ import java.util.List;
 @JsonIgnoreProperties({"listaCitas"})
 public class Service {
     @Id
-    @Column
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long servicioId;
+
     @Column(nullable = false)
     private String nombre;
+
     @Column(nullable = false)
     private String descripcion;
+
     @Column(nullable = false)
     private Double precio;
+
     @Column(nullable = false)
     private Integer duracion;
+
+    @ManyToOne
+    @JoinColumn(name = "sucursal_id", nullable = false, referencedColumnName = "sucursalId")
+    private Sucursal sucursal;
+
     @OneToMany(mappedBy = "servicio", cascade = CascadeType.ALL)
     private List<Appointment> listaCitas = new ArrayList<>();
 
     public Service() {
     }
 
-    public Service(String nombre, String descripcion, Double precio, Integer duracion) {
+    public Service(String nombre, String descripcion, Double precio, Integer duracion, Sucursal sucursal) {
         this.nombre = nombre;
         this.descripcion = descripcion;
         this.precio = precio;
         this.duracion = duracion;
+        this.sucursal = sucursal;
     }
 
     public Long getServicioId() {
@@ -75,6 +84,14 @@ public class Service {
         this.duracion = duracion;
     }
 
+    public Sucursal getSucursal() {
+        return sucursal;
+    }
+
+    public void setSucursal(Sucursal sucursal) {
+        this.sucursal = sucursal;
+    }
+
     public List<Appointment> getListaCitas() {
         return listaCitas;
     }
@@ -91,6 +108,8 @@ public class Service {
                 ", descripcion='" + descripcion + '\'' +
                 ", precio=" + precio +
                 ", duracion=" + duracion +
+                ", sucursal=" + sucursal +
                 '}';
     }
+
 }
