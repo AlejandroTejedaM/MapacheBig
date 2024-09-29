@@ -1,5 +1,6 @@
 package com.barber.appointment.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -7,6 +8,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "sucursal")
+@JsonIgnoreProperties({"barberos", "servicios"})
 public class Sucursal {
     @Id
     @Column
@@ -25,7 +27,7 @@ public class Sucursal {
     @OneToMany(mappedBy = "sucursal", cascade = CascadeType.ALL)
     private List<Service> servicios = new ArrayList<>();
 
-    public Sucursal(){};
+    public Sucursal(){}
 
     public Sucursal(Long sucursalId, String nombre, String direccion, List<Barbero> barberos, List<Service> servicios) {
         this.sucursalId = sucursalId;
