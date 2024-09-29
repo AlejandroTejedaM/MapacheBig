@@ -1,8 +1,10 @@
 package com.barber.appointment.Controller;
 
 import com.barber.appointment.Model.Service;
+import com.barber.appointment.Model.Sucursal;
 import com.barber.appointment.Model.User;
 import com.barber.appointment.Repository.ServiceRepository;
+import com.barber.appointment.Repository.SucursalRepository;
 import com.barber.appointment.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +23,7 @@ public class ServicioController {
     private ServiceRepository serviceRepository;
 
     @Autowired
-    private UserRepository userRepository;
+    private SucursalRepository sucursalRepository;
 
     @GetMapping
     public ResponseEntity<Iterable<Service>> findAll() {
@@ -55,11 +57,20 @@ public class ServicioController {
         return ResponseEntity.ok(serviceOptional.get());
     }
 
+    @GetMapping("/sucursal/{sucursalId}")
+    public ResponseEntity<Iterable<Service>> findBySucursalId(@PathVariable String sucursalId) {
+        Long idSucursalParsed = Long.parseLong(sucursalId);
+        Sucursal sucursal = sucursalRepository.findById(idSucursalParsed).get();
+        return ResponseEntity.ok(serviceRepository.findAllBySucursal(sucursal).get());
+    }
+
     @PostMapping
     public ResponseEntity<String> create(@RequestBody Service newObject, UriComponentsBuilder ucb) {
+        Sucursal sucursal = sucursalRepository.findById(newObject.getSucursal().getSucursalId()).get();
+        newObject.setSucursal(sucursal);
         Service savedService = serviceRepository.save(newObject);
         URI uri = ucb
-                .path("api/servicio")
+                .path("api/servicio/{id}")
                 .buildAndExpand(savedService.getServicioId())
                 .toUri();
         return ResponseEntity.ok().build();
@@ -69,7 +80,7 @@ public class ServicioController {
     public ResponseEntity<String> update(@PathVariable String id, @RequestBody Service newObject, UriComponentsBuilder ucb) {
         Long idLong = Long.parseLong(id);
         Service newService = serviceRepository.findById(idLong).get();
-        newObject.setServicioId(idLong);
+        newObject.setServicioId(newService.getServicioId());
         Service savedService = serviceRepository.save(newObject);
         URI uri = ucb
                 .path("api/servicio")

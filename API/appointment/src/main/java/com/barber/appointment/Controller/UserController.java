@@ -26,29 +26,27 @@ public class UserController {
     @GetMapping("/{id}")
     public ResponseEntity<User> findById(@PathVariable String id) {
         Long idLong = Long.parseLong(id);
-        return userRepository.findById(idLong).map(ResponseEntity:: ok).get();
+        return userRepository.findById(idLong).map(ResponseEntity::ok).get();
     }
 
     @PostMapping
     public ResponseEntity<String> create(@RequestBody User newObject, UriComponentsBuilder ucb) {
-        if (userRepository.findByCorreo(newObject.getCorreo()).isPresent()) {
-            throw new UserAlreadyExistsException("User with email " + newObject.getCorreo() + " already exists");
-        }
-        User newUsuario = (User) newObject;
-        User savedUsuario = userRepository.save(newUsuario);
+        User savedUsuario = userRepository.save(newObject);
         URI uri = ucb
-                .path("api/usuario")
+                .path("api/usuario/{id}")
                 .buildAndExpand(savedUsuario.getUsuarioId())
                 .toUri();
         return ResponseEntity.created(uri).build();
     }
 
-    @PutMapping
-    public ResponseEntity<String> update(@RequestBody User newObject, UriComponentsBuilder ucb) {
-        User newUsuario = (User) newObject;
-        User savedUsuario = userRepository.save(newUsuario);
+    @PutMapping("/{id}")
+    public ResponseEntity<String> update(@PathVariable String id,@RequestBody User newObject, UriComponentsBuilder ucb) {
+        Long idFloat = Long.parseLong(id);
+        User findUser = userRepository.findById(idFloat).get();
+        newObject.setUsuarioId(findUser.getUsuarioId());
+        User savedUsuario = userRepository.save(newObject);
         URI uri = ucb
-                .path("api/usuario")
+                .path("api/usuario/{id}")
                 .buildAndExpand(savedUsuario.getUsuarioId())
                 .toUri();
         return ResponseEntity.created(uri).build();

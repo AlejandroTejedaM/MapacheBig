@@ -3,10 +3,9 @@ package com.barber.appointment.Controller;
 import java.net.URI;
 import java.util.Optional;
 
-import com.barber.appointment.Model.Appointment;
-import com.barber.appointment.Model.Service;
-import com.barber.appointment.Model.User;
+import com.barber.appointment.Model.*;
 import com.barber.appointment.Repository.AppointmentRepository;
+import com.barber.appointment.Repository.BarberoRepository;
 import com.barber.appointment.Repository.ServiceRepository;
 import com.barber.appointment.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +26,9 @@ public class CitasController {
     @Autowired
     private ServiceRepository serviceRepository;
 
+    @Autowired
+    private BarberoRepository barberoRepository;
+
     @GetMapping
     public ResponseEntity<Iterable<Appointment>> findAll() {
         return ResponseEntity.ok(citasRepository.findAll());
@@ -34,14 +36,17 @@ public class CitasController {
 
     @PostMapping
     public ResponseEntity<String> create(@RequestBody Appointment newObject, UriComponentsBuilder ucb) {
-        Optional<User> userOptional = userRepository.findById(newObject.getUser().getUsuarioId());
-        Optional<Service> serviceOptional = serviceRepository.findById(newObject.getServicio().getServicioId());
-        newObject.setUser(userOptional.get());
-        newObject.setServicio(serviceOptional.get());
-        Appointment savedUsuario = citasRepository.save(newObject);
+        System.out.println(newObject.toString());
+        Service servicio = serviceRepository.findById(newObject.getServicio().getServicioId()).get();
+        User usuario = userRepository.findById(newObject.getUser().getUsuarioId()).get();
+        Barbero barbero = barberoRepository.findById(newObject.getBarbero().getBarberoId()).get();
+        newObject.setServicio(servicio);
+        newObject.setUser(usuario);
+        newObject.setBarbero(barbero);
+        Appointment savedCita = citasRepository.save(newObject);
         URI uri = ucb
-                .path("api/citas")
-                .buildAndExpand(savedUsuario.getCitaId())
+                .path("api/citas/{id}")
+                .buildAndExpand(savedCita.getCitaId())
                 .toUri();
         return ResponseEntity.created(uri).build();
     }
@@ -50,7 +55,7 @@ public class CitasController {
     public ResponseEntity<String> update(@PathVariable String id, @RequestBody Appointment newObject, UriComponentsBuilder ucb) {
         Long idLong = Long.parseLong(id);
         Appointment newAppointment = citasRepository.findById(idLong).get();
-        newObject.setCitaId(idLong);
+        newObject.setCitaId(newAppointment.getCitaId());
         Appointment savedCita = citasRepository.save(newObject);
         URI uri = ucb
                 .path("api/citas")

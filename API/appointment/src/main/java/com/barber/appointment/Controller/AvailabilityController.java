@@ -19,9 +19,6 @@ public class AvailabilityController {
     @Autowired
     private AvailabilityRepository availabilityRepository;
 
-    @Autowired
-    private UserRepository userRepository;
-
     @GetMapping()
     public ResponseEntity<Iterable<Availability>> findAll() {
         return ResponseEntity.ok(availabilityRepository.findAll());
@@ -38,14 +35,11 @@ public class AvailabilityController {
     @GetMapping("/barbero/{barberoId}")
     public ResponseEntity<Optional<Iterable<Availability>>> findByBarberoId(@PathVariable String barberoId) {
         Long idLong = Long.parseLong(barberoId);
-        Optional<User> userOptional = userRepository.findById(idLong);
         return ResponseEntity.ok(availabilityRepository.findByUser_UsuarioId(idLong));
     }
 
     @PostMapping
     public ResponseEntity<String> create(@RequestBody Availability newObject, UriComponentsBuilder ucb) {
-        Optional<User> userOptional = userRepository.findById(newObject.getUser().getUsuarioId());
-        newObject.setUser(userOptional.get());
         Availability savedAvailability = availabilityRepository.save(newObject);
         URI uri = ucb
                 .path("/api/disponibilidad/{id}")
@@ -58,17 +52,13 @@ public class AvailabilityController {
     public ResponseEntity<String> update(@PathVariable String id, @RequestBody Availability newObject, UriComponentsBuilder ucb) {
         Long idLong = Long.parseLong(id);
         Availability newAvailability = availabilityRepository.findById(idLong).get();
-        if (newAvailability != null) {
-            newObject.setDisponibilidadId(idLong);
-            Availability savedAvailability = availabilityRepository.save(newObject);
-            URI uri = ucb
-                    .path("api/disponibilidad/{id}")
-                    .buildAndExpand(savedAvailability.getDisponibilidadId())
-                    .toUri();
-            return ResponseEntity.created(uri).build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        newObject.setDisponibilidadId(newAvailability.getDisponibilidadId());
+        Availability savedAvailability = availabilityRepository.save(newObject);
+        URI uri = ucb
+                .path("api/disponibilidad/{id}")
+                .buildAndExpand(savedAvailability.getDisponibilidadId())
+                .toUri();
+        return ResponseEntity.created(uri).build();
     }
 
     @DeleteMapping("/{id}")
