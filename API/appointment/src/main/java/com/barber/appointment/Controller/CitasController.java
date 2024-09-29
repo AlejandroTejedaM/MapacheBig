@@ -34,88 +34,51 @@ public class CitasController {
 
     @PostMapping
     public ResponseEntity<String> create(@RequestBody Appointment newObject, UriComponentsBuilder ucb) {
-        try {
-            Optional<User> userOptional = userRepository.findById(newObject.getUser().getUsuarioId());
-            if (!userOptional.isPresent()) {
-                return ResponseEntity.unprocessableEntity().body("Usuario no encontrado");
-            }
-            Optional<Service> serviceOptional = serviceRepository.findById(newObject.getServicio().getServicioId());
-            if (!serviceOptional.isPresent()) {
-                return ResponseEntity.unprocessableEntity().body("Servicio no encontrado");
-            }
-            newObject.setUser(userOptional.get());
-            newObject.setServicio(serviceOptional.get());
-            Appointment savedUsuario = citasRepository.save(newObject);
-            URI uri = ucb
-                    .path("api/citas")
-                    .buildAndExpand(savedUsuario.getCitaId())
-                    .toUri();
-            return ResponseEntity.created(uri).build();
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage() + "" + newObject);
-        }
+        Optional<User> userOptional = userRepository.findById(newObject.getUser().getUsuarioId());
+        Optional<Service> serviceOptional = serviceRepository.findById(newObject.getServicio().getServicioId());
+        newObject.setUser(userOptional.get());
+        newObject.setServicio(serviceOptional.get());
+        Appointment savedUsuario = citasRepository.save(newObject);
+        URI uri = ucb
+                .path("api/citas")
+                .buildAndExpand(savedUsuario.getCitaId())
+                .toUri();
+        return ResponseEntity.created(uri).build();
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<String> update(@PathVariable String id, @RequestBody Appointment newObject, UriComponentsBuilder ucb) {
-        try {
-            Long idLong = Long.parseLong(id);
-            Appointment newAppointment = citasRepository.findById(idLong).get();
-            if (newAppointment != null) {
-                newObject.setCitaId(idLong);
-                Appointment savedCita = citasRepository.save(newObject);
-                URI uri = ucb
-                        .path("api/citas")
-                        .buildAndExpand(savedCita.getCitaId())
-                        .toUri();
-                return ResponseEntity.created(uri).build();
-            } else {
-                return ResponseEntity.notFound().build();
-            }
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        Long idLong = Long.parseLong(id);
+        Appointment newAppointment = citasRepository.findById(idLong).get();
+        newObject.setCitaId(idLong);
+        Appointment savedCita = citasRepository.save(newObject);
+        URI uri = ucb
+                .path("api/citas")
+                .buildAndExpand(savedCita.getCitaId())
+                .toUri();
+        return ResponseEntity.created(uri).build();
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> delete(@PathVariable String id) {
-        try {
-            Long idLong = Long.parseLong(id);
-            if (!citasRepository.existsById(idLong)) {
-                return ResponseEntity.notFound().build();
-            }
-            citasRepository.deleteById(idLong);
-            return ResponseEntity.ok().build();
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+        Long idLong = Long.parseLong(id);
+        if (!citasRepository.existsById(idLong)) {
+            return ResponseEntity.notFound().build();
         }
+        citasRepository.deleteById(idLong);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Appointment> findById(@PathVariable String id) {
-        try {
-            Long idLong = Long.parseLong(id);
-            if (!citasRepository.existsById(idLong)) {
-                return ResponseEntity.notFound().build();
-            }
-            return ResponseEntity.ok(citasRepository.findById(idLong).get());
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
+        Long idLong = Long.parseLong(id);
+        return ResponseEntity.ok(citasRepository.findById(idLong).get());
     }
 
     @GetMapping("/usuario/{id}")
     public ResponseEntity<Iterable<Appointment>> findByUserId(@PathVariable String id) {
-        try {
-            Long idLong = Long.parseLong(id);
-            User user = userRepository.findById(idLong).get();
-            if (user == null) {
-                return ResponseEntity.notFound().build();
-            } else {
-                return ResponseEntity.ok(citasRepository.findByUser(user));
-            }
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
+        Long idLong = Long.parseLong(id);
+        User user = userRepository.findById(idLong).get();
+        return ResponseEntity.ok(citasRepository.findByUser(user));
     }
 }

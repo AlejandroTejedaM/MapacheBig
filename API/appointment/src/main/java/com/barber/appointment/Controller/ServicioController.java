@@ -30,110 +30,59 @@ public class ServicioController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Service> findById(@PathVariable String id) {
-        try {
-            Long idLong = Long.parseLong(id);
-            Optional<Service> serviceOptional = serviceRepository.findById(idLong);
-            if (serviceOptional.isPresent()) {
-                return ResponseEntity.ok(serviceOptional.get());
-            } else {
-                return ResponseEntity.notFound().build();
-            }
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
+        Long idLong = Long.parseLong(id);
+        Optional<Service> serviceOptional = serviceRepository.findById(idLong);
+        return ResponseEntity.ok(serviceOptional.get());
     }
 
     @GetMapping("/nombre/{name}")
     public ResponseEntity<Iterable<Service>> findAllByName(@PathVariable String name) {
-        try {
-            Optional<Iterable<Service>> serviceOptional = serviceRepository.findAllByNombre(name);
-            if (serviceOptional.isPresent()) {
-                return ResponseEntity.ok(serviceOptional.get());
-            } else {
-                return ResponseEntity.notFound().build();
-            }
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
+        Optional<Iterable<Service>> serviceOptional = serviceRepository.findAllByNombre(name);
+        return ResponseEntity.ok(serviceOptional.get());
     }
 
     @GetMapping("/precio/{price}")
     public ResponseEntity<Iterable<Service>> findAllByPrice(@PathVariable String price) {
-        try {
-            Double priceDouble = Double.parseDouble(price);
-            Optional<Iterable<Service>> serviceOptional = serviceRepository.findAllByPrecio(priceDouble);
-            if (serviceOptional.isPresent()) {
-                return ResponseEntity.ok(serviceOptional.get());
-            } else {
-                return ResponseEntity.notFound().build();
-            }
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
+        Double priceDouble = Double.parseDouble(price);
+        Optional<Iterable<Service>> serviceOptional = serviceRepository.findAllByPrecio(priceDouble);
+        return ResponseEntity.ok(serviceOptional.get());
     }
 
     @GetMapping("/duracion/{duration}")
     public ResponseEntity<Iterable<Service>> findAllByDuration(@PathVariable String duration) {
-        try {
-            Integer durationInt = Integer.parseInt(duration);
-            Optional<Iterable<Service>> serviceOptional = serviceRepository.findAllByDuracion(durationInt);
-            if (serviceOptional.isPresent()) {
-                return ResponseEntity.ok(serviceOptional.get());
-            } else {
-                return ResponseEntity.notFound().build();
-            }
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().build();
-        }
+        Integer durationInt = Integer.parseInt(duration);
+        Optional<Iterable<Service>> serviceOptional = serviceRepository.findAllByDuracion(durationInt);
+        return ResponseEntity.ok(serviceOptional.get());
     }
 
     @PostMapping
     public ResponseEntity<String> create(@RequestBody Service newObject, UriComponentsBuilder ucb) {
-        try {
-            Service savedService = serviceRepository.save(newObject);
-            URI uri = ucb
-                    .path("api/servicio")
-                    .buildAndExpand(savedService.getServicioId())
-                    .toUri();
-            return ResponseEntity.ok().build();
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        Service savedService = serviceRepository.save(newObject);
+        URI uri = ucb
+                .path("api/servicio")
+                .buildAndExpand(savedService.getServicioId())
+                .toUri();
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<String> update(@PathVariable String id, @RequestBody Service newObject, UriComponentsBuilder ucb) {
-        try {
-            Long idLong = Long.parseLong(id);
-            Service newService = serviceRepository.findById(idLong).get();
-            if (newService != null) {
-                newObject.setServicioId(idLong);
-                Service savedService = serviceRepository.save(newObject);
-                URI uri = ucb
-                        .path("api/servicio")
-                        .buildAndExpand(savedService.getServicioId())
-                        .toUri();
-                return ResponseEntity.created(uri).build();
-            } else {
-                return ResponseEntity.notFound().build();
-            }
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        Long idLong = Long.parseLong(id);
+        Service newService = serviceRepository.findById(idLong).get();
+        newObject.setServicioId(idLong);
+        Service savedService = serviceRepository.save(newObject);
+        URI uri = ucb
+                .path("api/servicio")
+                .buildAndExpand(savedService.getServicioId())
+                .toUri();
+        return ResponseEntity.created(uri).build();
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> delete(@PathVariable String id) {
-        try {
-            Long idLong = Long.parseLong(id);
-            if (!serviceRepository.existsById(idLong)) {
-                return ResponseEntity.notFound().build();
-            }
-            serviceRepository.deleteById(idLong);
-            return ResponseEntity.ok().build();
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-        }
+        Long idLong = Long.parseLong(id);
+        serviceRepository.deleteById(idLong);
+        return ResponseEntity.ok().build();
     }
 
 
