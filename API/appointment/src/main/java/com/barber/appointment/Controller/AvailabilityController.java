@@ -14,6 +14,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/disponibilidad")
+@CrossOrigin(origins = "*")
 public class AvailabilityController {
 
     @Autowired

@@ -2,6 +2,7 @@ package com.barber.appointment.Controller;
 
 import com.barber.appointment.Model.Barbero;
 import com.barber.appointment.Repository.BarberoRepository;
+import com.barber.appointment.Repository.SucursalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,10 +12,14 @@ import java.net.URI;
 
 @RestController
 @RequestMapping("/api/barbero")
+@CrossOrigin(origins = "*")
 public class BarberoControllar {
 
     @Autowired
     private BarberoRepository barberoRepository;
+
+    @Autowired
+    private SucursalRepository sucursalRepository;
 
     @GetMapping
     public ResponseEntity<Iterable<Barbero>> findAll() {
@@ -27,6 +32,12 @@ public class BarberoControllar {
         return barberoRepository.findById(idLong)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @GetMapping("/sucursal/{id}")
+    public ResponseEntity<Iterable<Barbero>> findBySucursalId(@PathVariable String id){
+        Long idLong = Long.parseLong(id);
+        return ResponseEntity.ok(barberoRepository.findAllBySucursal(sucursalRepository.findById(idLong).get()));
     }
 
     @PostMapping
