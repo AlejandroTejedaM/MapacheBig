@@ -1,7 +1,6 @@
 package com.barber.appointment.Repository;
 
 import com.barber.appointment.Model.Barbero;
-import com.barber.appointment.Model.Service;
 import com.barber.appointment.Model.Sucursal;
 import org.springframework.data.repository.CrudRepository;
 
