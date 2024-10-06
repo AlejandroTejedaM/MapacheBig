@@ -11,6 +11,7 @@ import java.net.URI;
 
 @RestController
 @RequestMapping("/api/sucursal")
+@CrossOrigin(origins = "*")
 public class SucursalController {
 
     @Autowired
