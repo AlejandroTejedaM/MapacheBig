@@ -1,20 +1,27 @@
 package com.barber.appointment.Controller;
 
-import com.barber.appointment.Model.Service;
-import com.barber.appointment.Model.Sucursal;
-import com.barber.appointment.Model.User;
-import com.barber.appointment.Repository.ServiceRepository;
-import com.barber.appointment.Repository.SucursalRepository;
-import com.barber.appointment.Repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
-
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.util.UriComponentsBuilder;
+
+import com.barber.appointment.Model.Service;
+import com.barber.appointment.Model.Sucursal;
+import com.barber.appointment.Repository.ServiceRepository;
+import com.barber.appointment.Repository.SucursalRepository;
+
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/servicio")
 public class ServicioController {
