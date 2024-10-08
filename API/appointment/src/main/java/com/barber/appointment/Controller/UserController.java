@@ -22,6 +22,7 @@ import com.barber.appointment.Repository.UserRepository;
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/usuario")
+@CrossOrigin(origins = "*")
 public class UserController {
     @Autowired
     private UserRepository userRepository;

@@ -24,6 +24,7 @@ import com.barber.appointment.Repository.SucursalRepository;
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/servicio")
+@CrossOrigin(origins = "*")
 public class ServicioController {
 
     @Autowired

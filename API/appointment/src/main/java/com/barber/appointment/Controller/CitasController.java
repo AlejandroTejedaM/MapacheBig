@@ -15,6 +15,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
 @RequestMapping("/api/citas")
+@CrossOrigin(origins = "*")
 public class CitasController {
 
     @Autowired
