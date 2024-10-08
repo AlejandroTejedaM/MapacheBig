@@ -19,7 +19,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.barber.appointment.Model.User;
 import com.barber.appointment.Repository.UserRepository;
 
-@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/usuario")
 @CrossOrigin(origins = "*")

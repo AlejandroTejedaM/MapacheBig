@@ -21,7 +21,6 @@ import com.barber.appointment.Model.Sucursal;
 import com.barber.appointment.Repository.ServiceRepository;
 import com.barber.appointment.Repository.SucursalRepository;
 
-@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/api/servicio")
 @CrossOrigin(origins = "*")
